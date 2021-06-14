@@ -21,3 +21,11 @@ instruction to create and load our database:
     VALUES ('your movie name', "your description")
 
     to add a movie into the db to view
+
+
+## Populating real IMDB data:
+1. Download the titles basic meta data from the IMDB website and put the extracted `data.tsv` file in the `./imdb_movies_to_db/title.basic.tsv` folder in the repo 
+   (Note: Data should be retrieved from https://datasets.imdbws.com/title.basics.tsv.gz)
+
+2. To move this real data into the database simply run `python .\imdb_movies_to_db\movie_tsv_to_db.py` after installing the `requirements.txt` file as explained
+   in the instructions above.

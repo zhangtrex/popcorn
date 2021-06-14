@@ -68,7 +68,7 @@ DROP TABLE IF EXISTS `popcorn`.`Movie` ;
 
 CREATE TABLE IF NOT EXISTS `popcorn`.`Movie` (
   `mid` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) CHARACTER SET 'utf8mb4' NOT NULL,
+  `name` VARCHAR(150) CHARACTER SET 'utf8mb4' NOT NULL,
   `description` VARCHAR(500) CHARACTER SET 'utf8mb4' NOT NULL,
   PRIMARY KEY (`mid`),
   INDEX `name` (`name` ASC),
