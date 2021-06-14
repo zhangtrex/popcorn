@@ -1,0 +1,73 @@
+Tables_in_popcorn
+Comment
+Genre
+Movie
+MovieGenre
+MovieRating
+NewMovieRequest
+User
+gid	genre
+1	Action
+2	Cartoon
+3	Crime
+4	SciFi
+mid	name	description
+1	Kill Bill	Kill Bill: Volume 1 is a 2003 American martial arts film ...
+2	Sponge on the Run	The SpongeBob Movie: Sponge on the Run is a 2020 American..
+3	Back to the Future	Back to the Future is a 1985 American science fiction ...
+mid	gid
+1	1
+1	3
+2	2
+3	4
+uid	passwordHash	username	lastLogin	isBlocked	isDeleted	accessLevel
+1	passwd1	testu1	2021-06-13 23:46:30	0	0	0
+2	passwd2	testu2	2021-06-13 23:46:30	0	0	0
+3	passwd3	testu3	2021-06-13 23:46:30	0	0	0
+nid	uid	movieName	description	reason	status
+1	1	TestMovie1	description of test mv 1	no reason	0
+2	1	TestMovie2	description of test mv 2	I like it	0
+3	2	TestMovie3	description of test mv 3	My mom likes it	0
+rid	stars	uid	mid	isDeleted
+1	5	1	1	0
+2	2	1	2	0
+3	3	2	2	0
+4	4	3	1	1
+cid	uid	mid	content	created	lastUpdated	isDeleted
+1	1	1	Five Point Palm Exploding Heart Technique! Ha!	2021-06-13 23:46:30	2021-06-13 23:46:30	0
+2	1	2	Who lives in the pineapple under the sea?	2021-06-13 23:46:30	2021-06-13 23:46:30	0
+3	2	2	Sponge Bob Square Pants!	2021-06-13 23:46:30	2021-06-13 23:46:30	0
+4	3	1	Okinawa, one way.	2021-06-13 23:46:30	2021-06-13 23:46:30	1
+cid	uid	mid	content	created	lastUpdated	isDeleted
+4	3	1	Okinawa, one way.	2021-06-13 23:46:30	2021-06-13 23:46:30	1
+content
+Five Point Palm Exploding Heart Technique! Ha!
+Okinawa, one way.
+stars
+2
+3
+COUNT(*)
+1
+name	genre
+Back to the Future	SciFi
+Kill Bill	Action
+Kill Bill	Crime
+Sponge on the Run	Cartoon
+genre
+Action
+Crime
+name
+Sponge on the Run
+name	content	created	lastUpdated
+Kill Bill	Five Point Palm Exploding Heart Technique! Ha!	2021-06-13 23:46:30	2021-06-13 23:46:30
+Sponge on the Run	Who lives in the pineapple under the sea?	2021-06-13 23:46:30	2021-06-13 23:46:30
+Sponge on the Run	Sponge Bob Square Pants!	2021-06-13 23:46:30	2021-06-13 23:46:30
+content	created	lastUpdated
+Five Point Palm Exploding Heart Technique! Ha!	2021-06-13 23:46:30	2021-06-13 23:46:30
+mid	name	description	mid	gid
+3	Back to the Future	Back to the Future is a 1985 American science fiction ...	3	4
+name	avg(MovieRating.stars)
+Kill Bill	4.5000
+Sponge on the Run	2.5000
+username	content
+testu1	Five Point Palm Exploding Heart Technique! Ha!
