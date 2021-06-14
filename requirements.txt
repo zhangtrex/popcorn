@@ -10,5 +10,9 @@ djangorestframework==3.12.2
 # MySQL Client - Used as an interface to connect Django application to the MySQL server.
 mysqlclient==2.0.3
 
+# Djoser - Used to provide basic log in, log out, and authentication features
+djoser==0.4.1
 
+# Pandas - Used for parsing the csv/tsv files
 pandas==1.2.4
+

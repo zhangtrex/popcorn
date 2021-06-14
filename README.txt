@@ -22,6 +22,19 @@ instruction to create and load our database:
 
     to add a movie into the db to view
 
+Running the Features
+
+1. Logging in/out as user
+- Either use postman or visit the localhost url http://127.0.0.1:8000/auth/users/ on a browser
+- Create your new user by entering a unique username and a password longer than 8 characters
+- Once logging in, the response will be an auth token
+- Save the token for future authenticated api calls
+- After using the API, log out by visiting http://127.0.0.1:8000/auth/token/logout
+
+2. Create a new movie request
+- Log in using your account
+- Add the auth token returned as an Authorization header with value: Token <enter token>
+- Call the endpoint with the following body fields: uid(int, foreign key), movieName(string), description(string), reason(string)
 
 ## Populating real IMDB data:
 1. Download the titles basic meta data from the IMDB website and put the extracted `data.tsv` file in the `./imdb_movies_to_db/title.basic.tsv` folder in the repo 
@@ -29,3 +42,4 @@ instruction to create and load our database:
 
 2. To move this real data into the database simply run `python .\imdb_movies_to_db\movie_tsv_to_db.py` after installing the `requirements.txt` file as explained
    in the instructions above.
+
