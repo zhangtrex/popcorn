@@ -1,7 +1,8 @@
 from rest_framework import serializers
+from django.contrib.auth.hashers import make_password
+from djoser.serializers import UserCreateSerializer, UserSerializer
 
-from .models import Movie
-
+from .models import *
 
 class MovieSerializer(serializers.ModelSerializer):
   name = serializers.CharField(max_length=200, required=True)
@@ -19,7 +20,32 @@ class MovieSerializer(serializers.ModelSerializer):
   class Meta:
     model = Movie
     fields = (
-      'id',
+      'mid',
       'name',
       'description'
+    )
+  
+
+class UserCreateSerializer(UserCreateSerializer):
+  class Meta(UserCreateSerializer.Meta):
+    model = User
+    fields = ('username', 'password')
+
+class NewMovieRequestSerializer(serializers.ModelSerializer):
+  def create(self, validated_data):
+    return NewMovieRequest.objects.create(
+      uid = validated_data.get('uid'),
+      movieName = validated_data.get('movieName'),
+      description = validated_data.get('description'),
+      reason = validated_data.get('reason'),
+    )
+  
+  class Meta:
+    model = NewMovieRequest
+    fields = (
+      'nid',
+      'uid',
+      'movieName',
+      'description',
+      'reason',
     )

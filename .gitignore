@@ -1,0 +1,7 @@
+data.tsv
+/venv
+/.idea
+*.pyc
+*.cpython-36.pyc
+popcorn_api/popcorn/__pycache__/
+popcorn_api/popcorn_api/__pycache__/
