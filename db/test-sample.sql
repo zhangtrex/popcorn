@@ -34,11 +34,11 @@ SELECT * FROM MovieGenre;
 
 
 -- Create users
-INSERT INTO User(passwordHash, username, accesslevel)
+INSERT INTO User(password, username, accesslevel)
     VALUES ('passwd1', 'testu1', 0);
-INSERT INTO User(passwordHash, username, accesslevel)
+INSERT INTO User(password, username, accesslevel)
     VALUES ('passwd2', 'testu2', 0);
-INSERT INTO User(passwordHash, username, accesslevel)
+INSERT INTO User(password, username, accesslevel)
     VALUES ('passwd3', 'testu3', 0);
 SELECT * FROM User;
 
@@ -122,7 +122,7 @@ SELECT content, created, lastUpdated FROM Comment
     WHERE isDeleted = False AND name = 'Kill Bill';
 
 -- Another user registration
-INSERT INTO User (username, passwordHash)
+INSERT INTO User (username, password)
 VALUE
 ('rex', '0BE79EDB97498676E587115024035F57');
 

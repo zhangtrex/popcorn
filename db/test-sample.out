@@ -20,10 +20,10 @@ mid	gid
 1	3
 2	2
 3	4
-uid	passwordHash	username	lastLogin	isBlocked	isDeleted	accessLevel
-1	passwd1	testu1	2021-06-13 23:46:30	0	0	0
-2	passwd2	testu2	2021-06-13 23:46:30	0	0	0
-3	passwd3	testu3	2021-06-13 23:46:30	0	0	0
+uid	password	username	lastLogin	isBlocked	isDeleted	accessLevel
+1	passwd1	testu1	2021-06-14 20:28:05	0	0	0
+2	passwd2	testu2	2021-06-14 20:28:05	0	0	0
+3	passwd3	testu3	2021-06-14 20:28:05	0	0	0
 nid	uid	movieName	description	reason	status
 1	1	TestMovie1	description of test mv 1	no reason	0
 2	1	TestMovie2	description of test mv 2	I like it	0
@@ -34,12 +34,12 @@ rid	stars	uid	mid	isDeleted
 3	3	2	2	0
 4	4	3	1	1
 cid	uid	mid	content	created	lastUpdated	isDeleted
-1	1	1	Five Point Palm Exploding Heart Technique! Ha!	2021-06-13 23:46:30	2021-06-13 23:46:30	0
-2	1	2	Who lives in the pineapple under the sea?	2021-06-13 23:46:30	2021-06-13 23:46:30	0
-3	2	2	Sponge Bob Square Pants!	2021-06-13 23:46:30	2021-06-13 23:46:30	0
-4	3	1	Okinawa, one way.	2021-06-13 23:46:30	2021-06-13 23:46:30	1
+1	1	1	Five Point Palm Exploding Heart Technique! Ha!	2021-06-14 20:28:05	2021-06-14 20:28:05	0
+2	1	2	Who lives in the pineapple under the sea?	2021-06-14 20:28:05	2021-06-14 20:28:05	0
+3	2	2	Sponge Bob Square Pants!	2021-06-14 20:28:05	2021-06-14 20:28:05	0
+4	3	1	Okinawa, one way.	2021-06-14 20:28:05	2021-06-14 20:28:05	1
 cid	uid	mid	content	created	lastUpdated	isDeleted
-4	3	1	Okinawa, one way.	2021-06-13 23:46:30	2021-06-13 23:46:30	1
+4	3	1	Okinawa, one way.	2021-06-14 20:28:05	2021-06-14 20:28:05	1
 content
 Five Point Palm Exploding Heart Technique! Ha!
 Okinawa, one way.
@@ -59,11 +59,11 @@ Crime
 name
 Sponge on the Run
 name	content	created	lastUpdated
-Kill Bill	Five Point Palm Exploding Heart Technique! Ha!	2021-06-13 23:46:30	2021-06-13 23:46:30
-Sponge on the Run	Who lives in the pineapple under the sea?	2021-06-13 23:46:30	2021-06-13 23:46:30
-Sponge on the Run	Sponge Bob Square Pants!	2021-06-13 23:46:30	2021-06-13 23:46:30
+Kill Bill	Five Point Palm Exploding Heart Technique! Ha!	2021-06-14 20:28:05	2021-06-14 20:28:05
+Sponge on the Run	Who lives in the pineapple under the sea?	2021-06-14 20:28:05	2021-06-14 20:28:05
+Sponge on the Run	Sponge Bob Square Pants!	2021-06-14 20:28:05	2021-06-14 20:28:05
 content	created	lastUpdated
-Five Point Palm Exploding Heart Technique! Ha!	2021-06-13 23:46:30	2021-06-13 23:46:30
+Five Point Palm Exploding Heart Technique! Ha!	2021-06-14 20:28:05	2021-06-14 20:28:05
 mid	name	description	mid	gid
 3	Back to the Future	Back to the Future is a 1985 American science fiction ...	3	4
 name	avg(MovieRating.stars)
