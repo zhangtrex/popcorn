@@ -23,5 +23,5 @@ The `exported.sql` in this folder is an exported sql script file.
 In bash/zsh, do
 
 ```{bash}
-sudo mysql <exported.sql && sudo mysql <test-sample.sql >test-sample-out.txt
+sudo mysql <drop_if_exists.sql && sudo mysql <setup_db_and_tables.sql && sudo mysql <test-sample.sql >test-sample.out
 ```
