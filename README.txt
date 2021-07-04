@@ -41,6 +41,10 @@ Running the Features
 - Add the auth token returned as an Authorization header with value: Token <enter token>
 - Call the endpoint with the following body fields: uid(int, foreign key), movieName(string), description(string), reason(string)
 
+3. Get all comments on a movie
+- Select a movie and get its mid
+- Either use postman or visit the localhost url http://127.0.0.1:8000/comments/<int:mid> on a browser
+
 ## Populating real IMDB data:
 1. Download the titles basic meta data from the IMDB website and put the extracted `data.tsv` file in the `./imdb_movies_to_db/title.basic.tsv` folder in the repo 
    (Note: Data should be retrieved from https://datasets.imdbws.com/title.basics.tsv.gz)

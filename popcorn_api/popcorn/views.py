@@ -47,3 +47,15 @@ class NewMovieRequestView(
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  
+class MovieCommentsView(
+  APIView, 
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+
+  def get(self, request, id=None, *args, **kwargs):
+    queryset = Comment.objects.filter(mid=kwargs['mid'])
+    read_serializer = CommentSerializer(queryset, many=True)
+    return Response(read_serializer.data)
+    
