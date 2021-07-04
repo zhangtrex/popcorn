@@ -1,18 +1,18 @@
 # Django Web Framework
-django==3.1.3
+django
 
 # Django Cors Headers - Used to enable CORS headers in API responses, and allow requests to be made to your API server from other origins.
-django-cors-headers==3.5.0
+django-cors-headers
 
 # Django Rest Framework - Used to design API logic
-djangorestframework==3.12.2
+djangorestframework
 
 # MySQL Client - Used as an interface to connect Django application to the MySQL server.
-mysqlclient==2.0.3
+mysqlclient
 
 # Djoser - Used to provide basic log in, log out, and authentication features
-djoser==0.4.1
+djoser
 
 # Pandas - Used for parsing the csv/tsv files
-pandas==1.2.4
+pandas
 
