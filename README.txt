@@ -10,7 +10,12 @@ instruction to create and load our database:
 3.  Run 'CREATE DATABASE popcorn' in MySQL CLI. This will create a database called popcorn
     Change the password in popcorn_api/popcorn_api/settings.py in the 'DATABASES' section
     Run 'python popcorn_api/manage.py migrate' to migrate all the schema to the database
-    Now, the database is all set.
+    Now, the database is all set. If you still receive errors during migrate, delete the migrations folder (as well as drop and recreate the popcorn database using your SQL client) and run the following commands in order:
+
+'python popcorn_api/manage.py makemigrations popcorn'
+'python popcorn_api/manage.py makemigrations'
+'python popcorn_api/manage.py migrate popcorn'
+'python popcorn_api/manage.py migrate'
 
 4.  Run 'python popcorn_api/manage.py runserver' to start the server
     go to localhost:8000/movies to see the query result for table movies
@@ -42,4 +47,3 @@ Running the Features
 
 2. To move this real data into the database simply run `python .\imdb_movies_to_db\movie_tsv_to_db.py` after installing the `requirements.txt` file as explained
    in the instructions above.
-
