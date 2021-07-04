@@ -17,7 +17,7 @@ class User(AbstractUser):
 
 class NewMovieRequest(models.Model):
     nid = models.AutoField(primary_key=True)
-    uid = models.ForeignKey('User', models.DO_NOTHING, db_column='uid', default=-1)
+    uid = models.ForeignKey('User', models.DO_NOTHING, db_column='uid')
     movieName = models.CharField(unique=True, max_length=150) 
     description = models.CharField(max_length=500, default=None)
     reason = models.CharField(max_length=200, default=None)
@@ -40,8 +40,8 @@ class Comment(models.Model):
     mid = models.ForeignKey('Movie', models.DO_NOTHING, db_column='mid')
     content = models.CharField(max_length=200)
     created = models.DateTimeField()
-    lastupdated = models.DateTimeField(db_column='lastUpdated')  # Field name made lowercase.
-    isdeleted = models.IntegerField(db_column='isDeleted', default=0)  # Field name made lowercase.
+    lastupdated = models.DateTimeField()  
+    isdeleted = models.IntegerField(default=0) 
 
     class Meta:
         db_table = 'Comment'
@@ -53,19 +53,19 @@ class Genre(models.Model):
     class Meta:
         db_table = 'Genre'
 
-class Moviegenre(models.Model):
-    mid = models.OneToOneField(Movie, models.DO_NOTHING, db_column='mid', primary_key=True)
-    gid = models.ForeignKey(Genre, models.DO_NOTHING, db_column='gid',default=-1)
+class MovieGenre(models.Model):
+    mid = models.OneToOneField(Movie, models.DO_NOTHING, primary_key=True)
+    gid = models.ForeignKey(Genre, models.DO_NOTHING)
 
     class Meta:
-        db_table = 'moviegenre'
+        db_table = 'MovieGenre'
 
-class Movierating(models.Model):
+class MovieRating(models.Model):
     rid = models.AutoField(primary_key=True)
     stars = models.IntegerField()
-    uid = models.ForeignKey('User', models.DO_NOTHING, db_column='uid',default=-1)
-    mid = models.ForeignKey('Movie', models.DO_NOTHING, db_column='mid',default=-1)
-    isdeleted = models.IntegerField(db_column='isDeleted')  # Field name made lowercase.
+    uid = models.ForeignKey('User', models.DO_NOTHING)
+    mid = models.ForeignKey('Movie', models.DO_NOTHING)
+    isdeleted = models.IntegerField() 
 
     class Meta:
-        db_table = 'movierating'
+        db_table = 'MovieRating'
