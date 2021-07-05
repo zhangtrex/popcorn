@@ -158,6 +158,7 @@ GROUP By Movie.mid
 ORDER BY avg(MovieRating.stars) DESC;
 
 -- Display movie name by popularity (having most comments)
+
 SELECT Movie.name, count(Comment.uid) FROM Comment
 JOIN Movie
 WHERE Movie.mid = Comment.mid
