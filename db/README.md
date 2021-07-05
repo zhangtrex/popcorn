@@ -25,3 +25,26 @@ In bash/zsh, do
 ```{bash}
 sudo mysql <drop_if_exists.sql && sudo mysql <setup_db_and_tables.sql && sudo mysql <test-sample.sql >test-sample.out
 ```
+
+
+## 4. How to run the test script for production?
+
+In bash/zsh, under project home directory, do
+
+```{bash}
+sudo mysql <db/drop_then_add_db.sql
+python popcorn_api/manage.py makemigrations popcorn
+python popcorn_api/manage.py makemigrations
+python popcorn_api/manage.py migrate popcorn
+python popcorn_api/manage.py migrate
+python ./imdb_movies_to_db/movie_tsv_to_db.py
+```
+
+That prepares the database with production data.
+
+Then do
+
+```{bash}
+sudo mysql <db/test-production.sql >db/test-production.out
+```
+

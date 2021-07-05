@@ -19,15 +19,28 @@ SELECT * FROM MovieGenre
 ORDER BY mid
 LIMIT 10;
 
-
--- Create users
-INSERT INTO User(password, username, accesslevel)
-    VALUES ('passwd1', 'testu1', 0);
-
-
 SELECT * FROM User
-ORDER BY uid
+ORDER BY uid DESC
 LIMIT 10;
+
+
+-- Adding  users
+INSERT INTO User(password, username, accesslevel, is_superuser, first_name, last_name, email, is_staff, is_active, date_joined, isBlocked, isDeleted)
+    VALUES ('passwd1', 'testu1', 0, false, 'u1', 'test', 'testu1@test.ca', false,
+        true, '2020-06-01 09:38:08', false, false);
+
+INSERT INTO User(password, username, accesslevel, is_superuser, first_name, last_name, email, is_staff, is_active, date_joined, isBlocked, isDeleted)
+    VALUES ('passwd2', 'testu2', 1, false, 'u2', 'test', 'testu2@test.ca', false,
+        true, '2020-06-01 01:38:08', false, false);
+
+INSERT INTO User(password, username, accesslevel, is_superuser, first_name, last_name, email, is_staff, is_active, date_joined, isBlocked, isDeleted)
+    VALUES ('passwd3', 'testu3', 0, false, 'u3', 'test', 'testu3@test.ca', false,
+        true, '2020-06-03 11:38:08', false, false);
+
+-- Check the user-adding
+SELECT * FROM User
+ORDER BY uid DESC
+LIMIT 3;
 
 
 
@@ -39,7 +52,7 @@ INSERT INTO NewMovieRequest(uid, moviename, description, reason, status)
 INSERT INTO NewMovieRequest(uid, moviename, description, reason, status)
     VALUES (2, 'TestMovie3', 'description of test mv 3', 'My mom likes it', 0);
 
-
+-- Check the newly added 3 users correct as added or not
 SELECT * FROM NewMovieRequest
 ORDER BY uid
 LIMIT 10;
@@ -47,12 +60,12 @@ LIMIT 10;
 
 
 -- Submit ratings to movies
-INSERT INTO MovieRating(stars, uid, mid)
-    VALUES (5, 1, 1);
-INSERT INTO MovieRating(stars, uid, mid)
-    VALUES (2, 1, 2);
-INSERT INTO MovieRating(stars, uid, mid)
-    VALUES (3, 2, 2);
+INSERT INTO MovieRating(stars, uid, mid, isDeleted)
+    VALUES (5, 1, 1, 0);
+INSERT INTO MovieRating(stars, uid, mid, isDeleted)
+    VALUES (2, 1, 2, 0);
+INSERT INTO MovieRating(stars, uid, mid, isDeleted)
+    VALUES (3, 2, 2, 0);
 INSERT INTO MovieRating(stars, uid, mid, isDeleted)
     VALUES (4, 3, 1, 1);
 
@@ -65,14 +78,26 @@ LIMIT 10;
 
 
 -- Submit comments to movies
-INSERT INTO Comment(uid, mid, content)
-    VALUES (1, 1, 'Five Point Palm Exploding Heart Technique! Ha!');
-INSERT INTO Comment(uid, mid, content)
-    VALUES (1, 2, 'Who lives in the pineapple under the sea?');
-INSERT INTO Comment(uid, mid, content)
-    VALUES (2, 2, 'Sponge Bob Square Pants!');
-INSERT INTO Comment(uid, mid, content, isDeleted)
-    VALUES (3, 1, 'Okinawa, one way.', 1);
+INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
+    VALUES (1, 1, 'Five Point Palm Exploding Heart Technique! Ha!', 
+        '2020-06-01 09:38:08',
+        '2020-06-01 09:38:08',
+        false);
+INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
+    VALUES (1, 2, 'Who lives in the pineapple under the sea?',
+        '2020-06-03 02:26:17',
+        '2020-06-09 07:01:59',
+        false);
+INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
+    VALUES (2, 2, 'Sponge Bob Square Pants!', 
+        '2020-01-01 16:54:10',
+        '2020-09-01 10:40:02',
+        false);
+INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
+    VALUES (3, 1, 'Okinawa, one way.',
+        '2020-02-12 12:22:23',
+        '2020-03-11 14:21:12',
+        true);
 
 
 INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
@@ -113,10 +138,13 @@ ORDER BY mid DESC
 LIMIT 10;
     
 -- Select comments of movie with mid = 1, display top 10 results by stars only
-SELECT content FROM Comment INNER JOIN Movie
-    USING (mid)
-    WHERE mid = 1
-ORDER BY stars
+SELECT content FROM Comment
+    INNER JOIN Movie
+        ON Comment.mid = Movie.mid
+    INNER JOIN MovieRating
+        ON MovieRating.mid = Comment.mid
+    WHERE Comment.mid = 1
+ORDER BY stars 
 LIMIT 10;
 
 -- Select stars of movie with mid = 2, display top 10 results only
@@ -175,10 +203,6 @@ SELECT content, created, lastUpdated FROM Comment
     INNER JOIN Movie USING (mid)
     WHERE isDeleted = False AND name = 'Battles 4';
 
--- Another user registration
-INSERT INTO User (username, password)
-VALUE
-('Rex', '0BE79EDB97498676E587115024035F57');
 
 -- Request a new movie
 
@@ -192,7 +216,7 @@ INSERT INTO NewMovieRequest (uid, movieName, description, reason)
 	)
 );
 
--- display movie names for a genre
+-- display top 10 movie names for a genre by mid
 
 SELECT * FROM Movie
 join MovieGenre
@@ -202,7 +226,7 @@ AND MovieGenre.gid in
 	SELECT gid from Genre
     WHERE Genre.genre = 'Family'
 )
-ORDER BY mid
+ORDER BY Movie.mid
 LIMIT 10;
 
 
@@ -242,6 +266,16 @@ WHERE User.uid = C.uid
 ORDER BY C.created
 LIMIT 10;
 
+-- Calculate avg/total stars for a moive with mid = 1
+
+SELECT AVG(stars), SUM(stars) FROM Comment
+    INNER JOIN Movie
+        ON Comment.mid = Movie.mid
+    INNER JOIN MovieRating
+        ON MovieRating.mid = Comment.mid
+    WHERE Comment.mid = 1;
+
+
 -- Add a new comment
 
 INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
@@ -249,4 +283,3 @@ INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
         NOW(),
         NOW(),
         false);
-

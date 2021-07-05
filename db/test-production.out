@@ -1,0 +1,125 @@
+Tables_in_popcorn
+Comment
+Genre
+Movie
+MovieGenre
+MovieRating
+NewMovieRequest
+User
+User_groups
+User_user_permissions
+auth_group
+auth_group_permissions
+auth_permission
+authtoken_token
+django_admin_log
+django_content_type
+django_migrations
+django_session
+gid	genre
+1	Action
+2	Adventure
+3	Biography
+4	Drama
+5	Fantasy
+6	Comedy
+7	War
+8	Documentary
+9	Crime
+10	Romance
+mid	name	description
+1	The Story of the Kelly Gang	
+2	The Prodigal Son	
+3	Robbery Under Arms	
+4	Hamlet	
+5	Don Quijote	
+6	The Fairylogue and Radio-Plays	
+7	El pastorcito de Torrente	
+8	Andreas Hofer	
+9	Hamlet, Prince of Denmark	
+10	Locura de amor	
+id	gid	mid
+1	1	1
+2	2	1
+3	3	1
+4	4	2
+5	4	3
+11	4	4
+26	4	5
+27	2	6
+28	5	6
+29	4	7
+password	last_login	is_superuser	first_name	last_name	email	is_staff	is_active	date_joined	uid	username	lastLogin	isBlocked	isDeleted	accessLevel
+passwd3	NULL	0	u3	test	testu3@test.ca	0	1	2020-06-03 11:38:08.000000	3	testu3	NULL	0	0	0
+passwd2	NULL	0	u2	test	testu2@test.ca	0	1	2020-06-01 01:38:08.000000	2	testu2	NULL	0	0	1
+passwd1	NULL	0	u1	test	testu1@test.ca	0	1	2020-06-01 09:38:08.000000	1	testu1	NULL	0	0	0
+nid	movieName	description	reason	status	uid
+1	TestMovie1	description of test mv 1	no reason	0	1
+2	TestMovie2	description of test mv 2	I like it	0	1
+3	TestMovie3	description of test mv 3	My mom likes it	0	2
+rid	stars	isdeleted	mid	uid
+1	5	0	1	1
+2	2	0	2	1
+3	3	0	2	2
+4	4	1	1	3
+cid	content	created	lastupdated	isdeleted	mid	uid
+1	Five Point Palm Exploding Heart Technique! Ha!	2020-06-01 09:38:08.000000	2020-06-01 09:38:08.000000	0	1	1
+4	Okinawa, one way.	2020-02-12 12:22:23.000000	2020-03-11 14:21:12.000000	1	1	3
+2	Who lives in the pineapple under the sea?	2020-06-03 02:26:17.000000	2020-06-09 07:01:59.000000	0	2	1
+3	Sponge Bob Square Pants!	2020-01-01 16:54:10.000000	2020-09-01 10:40:02.000000	0	2	2
+cid	content	created	lastupdated	isdeleted	mid	uid
+4	Okinawa, one way.	2020-02-12 12:22:23.000000	2020-03-11 14:21:12.000000	1	1	3
+content
+Five Point Palm Exploding Heart Technique! Ha!
+Okinawa, one way.
+Five Point Palm Exploding Heart Technique! Ha!
+Okinawa, one way.
+stars
+2
+3
+COUNT(*)
+1
+name	genre
+The Story of the Kelly Gang	Action
+The Story of the Kelly Gang	Adventure
+The Story of the Kelly Gang	Biography
+The Prodigal Son	Drama
+Robbery Under Arms	Drama
+Hamlet	Drama
+Don Quijote	Drama
+The Fairylogue and Radio-Plays	Adventure
+The Fairylogue and Radio-Plays	Fantasy
+El pastorcito de Torrente	Drama
+name
+El apóstol
+El apache de Londres
+Outwitting the Hun
+Sin dejar rastros
+How Troy Was Collared
+Napoleon Not So Great
+The Adventures of Prince Achmed
+Foam Sweet Foam
+Un discípulo de caco
+King of Jazz
+name	content	created	lastUpdated
+The Story of the Kelly Gang	Five Point Palm Exploding Heart Technique! Ha!	2020-06-01 09:38:08.000000	2020-06-01 09:38:08.000000
+The Prodigal Son	Who lives in the pineapple under the sea?	2020-06-03 02:26:17.000000	2020-06-09 07:01:59.000000
+The Prodigal Son	Sponge Bob Square Pants!	2020-01-01 16:54:10.000000	2020-09-01 10:40:02.000000
+mid	name	description	id	gid	mid
+23	The Life of Moses		63	11	23
+330	The New Wizard of Oz		687	11	330
+454	The Patchwork Girl of Oz		929	11	454
+590	Alice in Wonderland		1226	11	590
+1938	Aladdin's Other Lamp		3734	11	1938
+1976	The Babes in the Woods		3798	11	1976
+2299	The Little Pirate		4386	11	2299
+2462	The Poor Little Rich Girl		4688	11	2462
+2760	The Blue Bird		5230	11	2760
+3059	Little Women		5781	11	3059
+name	avg(MovieRating.stars)
+The Story of the Kelly Gang	4.5000
+The Prodigal Son	2.5000
+username	content
+testu1	Five Point Palm Exploding Heart Technique! Ha!
+AVG(stars)	SUM(stars)
+4.5000	18
