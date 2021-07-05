@@ -78,7 +78,7 @@ class MoviePopularView(
             WHERE Movie.mid = Comment.mid
             AND Comment.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)
             GROUP By Movie.mid
-            ORDER BY count(Comment.mid) DESC;
+            ORDER BY count(Comment.uid) DESC;
         """)
             row = cursor.fetchall()
             res = [{'mid': i[0], 'name': i[1], 'description': i[2], 'heat':i[3]} for i in row]

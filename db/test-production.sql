@@ -224,7 +224,7 @@ JOIN Movie
 WHERE Movie.mid = Comment.mid
 AND Comment.created < DATE_SUB(CURDATE(), INTERVAL 30 DAY)
 GROUP By Movie.mid
-ORDER BY count(Comment.mid) DESC;
+ORDER BY count(Comment.uid) DESC;
 
 
 -- View top 10 comments for a movie ordered by create time
