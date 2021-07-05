@@ -30,15 +30,15 @@ instruction to create and load our database:
 Running the Features
 
 1. Logging in/out as user
+- Either use postman or visit the localhost url http://127.0.0.1:8000/auth/users/ on a browser
+- Create your new user by entering a unique username and a password longer than 8 characters
+
+2. Creating a User
 - Either use postman or visit the localhost url http://127.0.0.1:8000/auth/token/login on a browser
 - Enter your username and a password
 - Once logging in, the response will be an auth token
 - Save the token for future authenticated api calls
 - After using the API, log out by visiting http://127.0.0.1:8000/auth/token/logout
-
-2. Creating a User
-- Either use postman or visit the localhost url http://127.0.0.1:8000/auth/users/ on a browser
-- Create your new user by entering a unique username and a password longer than 8 characters
 
 3. Create a new movie request
 - Log in using your account
