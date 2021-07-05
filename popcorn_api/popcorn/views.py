@@ -73,7 +73,7 @@ class MoviePopularView(
     def get(self, request):
         with connection.cursor() as cursor:
             cursor.execute("""
-            SELECT Movie.name, count(Comment.uid) FROM Comment
+            SELECT Movie.mid, Movie.name, Movie.description, count(Comment.uid) FROM Comment
             JOIN Movie
             WHERE Movie.mid = Comment.mid
             AND Comment.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)
@@ -81,4 +81,5 @@ class MoviePopularView(
             ORDER BY count(Comment.mid) DESC;
         """)
             row = cursor.fetchall()
-            return Response(row)
+            res = [{'mid': i[0], 'name': i[1], 'description': i[2], 'heat':i[3]} for i in row]
+            return Response(res)

@@ -219,7 +219,7 @@ LIMIT 10;
 
 -- Display movie name by popularity (having most comments)
 
-SELECT Movie.name, count(Comment.uid) FROM Comment
+SELECT Movie.mid, Movie.name, Movie.description, count(Comment.uid) FROM Comment
 JOIN Movie
 WHERE Movie.mid = Comment.mid
 AND Comment.created < DATE_SUB(CURDATE(), INTERVAL 30 DAY)
