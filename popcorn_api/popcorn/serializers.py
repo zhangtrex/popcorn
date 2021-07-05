@@ -24,6 +24,15 @@ class MovieSerializer(serializers.ModelSerializer):
       'name',
       'description'
     )
+
+class GenreSerializer(serializers.ModelSerializer):
+  genre = serializers.CharField(max_length=45, required=True)
+  class Meta:
+    model = Genre
+    fields = (
+      'gid',
+      'genre'
+    )
   
 
 class UserCreateSerializer(UserCreateSerializer):

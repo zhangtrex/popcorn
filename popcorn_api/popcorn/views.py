@@ -15,55 +15,77 @@ from django.db import connection
 
 
 class MovieView(
-    APIView,
-    UpdateModelMixin,
-    DestroyModelMixin,
+  APIView, 
+  UpdateModelMixin,
+  DestroyModelMixin, 
 ):
 
-    def get(self, request, id=None):
-        queryset = Movie.objects.all()
-        read_serializer = MovieSerializer(queryset, many=True)
-        return Response(read_serializer.data)
+  def get(self, request, id=None):
+    queryset = Movie.objects.all()
+    read_serializer = MovieSerializer(queryset, many=True)
+    return Response(read_serializer.data)
 
+class GenreView(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+
+  def get(self, request, id=None):
+    queryset = Genre.objects.all()
+    read_serializer = GenreSerializer(queryset, many=True)
+    return Response(read_serializer.data)
+
+class MovieGenreView(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+  # Get the movies associated with a certain genre
+  def get(self, request, id=None, *args, **kwargs):
+    queryset = Movie.objects.filter(moviegenre__gid=kwargs['gid'])
+    print(queryset)
+    read_serializer = MovieSerializer(queryset, many=True)
+    return Response(read_serializer.data)
 
 class UserView(
-    APIView,
-    UpdateModelMixin,
-    DestroyModelMixin,
+  APIView, 
+  UpdateModelMixin,
+  DestroyModelMixin, 
 ):
 
-    def post(self, request, id=None):
-        queryset = User.objects.all()
-        read_serializer = UserSerializer(queryset, many=True)
-        return Response(read_serializer.data)
+  def post(self, request, id=None):
+    queryset = User.objects.all()
+    read_serializer = UserSerializer(queryset, many=True)
+    return Response(read_serializer.data)
 
 
 class NewMovieRequestView(
-    APIView,
-    UpdateModelMixin,
-    DestroyModelMixin,
+  APIView, 
+  UpdateModelMixin,
+  DestroyModelMixin, 
 ):
-    permission_classes = [permissions.IsAuthenticated]
+  permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, id=None):
-        serializer = NewMovieRequestSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+  def post(self, request, id=None):
+    request.data['uid'] = request.user.uid
+    serializer = NewMovieRequestSerializer(data=request.data)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  
 class MovieCommentsView(
-    APIView,
-    UpdateModelMixin,
-    DestroyModelMixin,
+  APIView, 
+  UpdateModelMixin,
+  DestroyModelMixin,
 ):
 
-    def get(self, request, id=None, *args, **kwargs):
-        queryset = Comment.objects.filter(mid=kwargs['mid'])
-        read_serializer = CommentSerializer(queryset, many=True)
-        return Response(read_serializer.data)
-
+  def get(self, request, id=None, *args, **kwargs):
+    queryset = Comment.objects.filter(mid=kwargs['mid'])
+    read_serializer = CommentSerializer(queryset, many=True)
+    return Response(read_serializer.data)
+    
 
 class MoviePopularView(
     APIView,
