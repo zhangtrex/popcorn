@@ -83,7 +83,7 @@ DATABASES = {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'popcorn',
     'USER': 'root',
-    'PASSWORD': 'zhangrex',
+    'PASSWORD': 'whatIsLife42?',
     'HOST': 'localhost',
     'PORT': '3306',
   }
