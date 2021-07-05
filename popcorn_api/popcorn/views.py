@@ -22,6 +22,29 @@ class MovieView(
     read_serializer = MovieSerializer(queryset, many=True)
     return Response(read_serializer.data)
 
+class GenreView(
+  APIView, 
+  UpdateModelMixin,
+  DestroyModelMixin, 
+):
+
+  def get(self, request, id=None):
+    queryset = Genre.objects.all()
+    read_serializer = GenreSerializer(queryset, many=True)
+    return Response(read_serializer.data)
+
+class MovieGenreView(
+  APIView, 
+  UpdateModelMixin,
+  DestroyModelMixin, 
+):
+  # Get the movies associated with a certain genre
+  def get(self, request, id=None, *args, **kwargs):
+    queryset = Movie.objects.filter(moviegenre__gid=kwargs['gid'])
+    print(queryset)
+    read_serializer = MovieSerializer(queryset, many=True)
+    return Response(read_serializer.data)
+
 class UserView(
   APIView, 
   UpdateModelMixin,
