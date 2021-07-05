@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS `popcorn`.`MovieRating` (
   `mid` INT NOT NULL,
   `isDeleted` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`rid`, `uid`, `mid`),
+  INDEX `stars` (`stars` ASC),
   INDEX `fk_MovieRating_User1_idx` (`uid` ASC),
   INDEX `fk_MovieRating_Movie1_idx` (`mid` ASC),
   UNIQUE INDEX `rid_UNIQUE` (`rid` ASC),
