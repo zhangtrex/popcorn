@@ -266,6 +266,7 @@ WHERE User.uid = C.uid
 ORDER BY C.created
 LIMIT 10;
 
+
 -- Calculate avg/total stars for a moive with mid = 1
 
 SELECT AVG(stars), SUM(stars) FROM Comment
@@ -275,6 +276,14 @@ SELECT AVG(stars), SUM(stars) FROM Comment
         ON MovieRating.mid = Comment.mid
     WHERE Comment.mid = 1;
 
+-- Display movie name by popularity (having most comments)
+
+SELECT Movie.mid, Movie.name, Movie.description, count(Comment.uid) FROM Comment
+JOIN Movie
+WHERE Movie.mid = Comment.mid
+AND Comment.created < DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+GROUP By Movie.mid
+ORDER BY count(Comment.uid) DESC;
 
 -- Add a new comment
 
@@ -283,3 +292,4 @@ INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
         NOW(),
         NOW(),
         false);
+

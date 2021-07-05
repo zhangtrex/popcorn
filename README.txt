@@ -36,24 +36,34 @@ Running the Features
 - Save the token for future authenticated api calls
 - After using the API, log out by visiting http://127.0.0.1:8000/auth/token/logout
 
-2. Create a new movie request
+2. to be added
+
+3. Create a new movie request
 - Log in using your account
 - Add the auth token returned as an Authorization header with value: Token <enter token>
 - Call the endpoint with the following body fields: movieName(string), description(string), reason(string)
 - The endpoint is: http://127.0.0.1:8000/newmovierequest/
-
-3. Get all comments on a movie
-- Select a movie and get its mid (can get this using the http://localhost:8000/movies endpoint)
-- Either use postman or visit the localhost url http://127.0.0.1:8000/comments/<int:mid> on a browser
-- Will return all the columns
 
 4. Get movies by genre
 - Find out the id (i.e. gid) associated with a given genre from the API by using http://localhost:8000/genres/
 - Either use postman or visit the localhost url http://127.0.0.1:8000/movies/genre/<int:gid> on a browser
 - Will return all the movies associated with the genre specified by the gid
 
-5. What's popular
+5. Calculate avg stars rating for a movie
+- go to /movie/avg_star/<int:mid>, this will the avg stars rating for that movie.
+
+6. What's popular
 - go to /movie/most_popular/, this will gives a list of movies ordered by number of new comments in 30 days.
+
+7. Get all comments on a movie
+- Select a movie and get its mid (can get this using the http://localhost:8000/movies endpoint)
+- Either use postman or visit the localhost url http://127.0.0.1:8000/comments/<int:mid> on a browser
+- Will return all the columns
+
+8. Add a comment
+- Log in using your account
+- Add the auth token returned as an Authorization header with value: Token <enter token>
+- Call the endpoint http://127.0.0.1:8000/new_comment/ with the following body fields: mid(int, foreign key), content(string)
 
 ## Populating real IMDB data:
 1. Download the titles basic meta data from the IMDB website and put the extracted `data.tsv` file in the `./imdb_movies_to_db/title.basic.tsv` folder in the repo 

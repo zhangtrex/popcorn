@@ -60,6 +60,14 @@ class NewMovieRequestSerializer(serializers.ModelSerializer):
     )
 
 class CommentSerializer(serializers.ModelSerializer):
+  def create(self, validated_data):
+    return Comment.objects.create(
+      uid = validated_data.get('uid'),
+      mid = validated_data.get('mid'),
+      content = validated_data.get('content'),
+      isdeleted = False,
+    )
+
   class Meta:
     model = Comment
     fields = (
@@ -71,4 +79,14 @@ class CommentSerializer(serializers.ModelSerializer):
       'lastupdated',
       'isdeleted',
     )
-    
+
+class MovieRatingSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = MovieRating
+    fields = (
+      'rid',
+      'uid',
+      'mid',
+      'stars',
+      'isdeleted',
+    )

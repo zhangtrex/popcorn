@@ -10,5 +10,7 @@ urlpatterns = [
   path('newmovierequest/', views.NewMovieRequestView.as_view()),
   path('movies/most_popular/', views.MoviePopularView.as_view()),
   path('movies/genre/<int:gid>', views.MovieGenreView.as_view()),
-  path('comments/<int:mid>', views.MovieCommentsView.as_view())
+  path('movie/avg_star/<int:mid>', views.MovieAvgStarsView.as_view()),
+  path('comments/<int:mid>', views.MovieCommentsView.as_view()),
+  path('new_comment/', views.NewCommentView.as_view())
 ]

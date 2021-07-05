@@ -26,7 +26,7 @@ class MovieView(
     return Response(read_serializer.data)
 
 class GenreView(
-  APIView,
+  APIView, 
   UpdateModelMixin,
   DestroyModelMixin,
 ):
@@ -37,7 +37,7 @@ class GenreView(
     return Response(read_serializer.data)
 
 class MovieGenreView(
-  APIView,
+  APIView, 
   UpdateModelMixin,
   DestroyModelMixin,
 ):
@@ -47,6 +47,23 @@ class MovieGenreView(
     print(queryset)
     read_serializer = MovieSerializer(queryset, many=True)
     return Response(read_serializer.data)
+
+class MovieAvgStarsView(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+  def get(self, request, id=None, *args, **kwargs):
+    queryset = MovieRating.objects.filter(mid=kwargs['mid'])
+    read_serializer = MovieRatingSerializer(queryset, many=True)
+    total_stars = 0
+    for rating_row in read_serializer.data:
+      total_stars += rating_row['stars']
+
+    if len(read_serializer.data):
+      return Response(total_stars / len(read_serializer.data))
+    else:  # movie not found
+      return Response(read_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserView(
   APIView, 
@@ -85,6 +102,22 @@ class MovieCommentsView(
     queryset = Comment.objects.filter(mid=kwargs['mid'])
     read_serializer = CommentSerializer(queryset, many=True)
     return Response(read_serializer.data)
+
+
+class NewCommentView(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+  permission_classes = [permissions.IsAuthenticated]
+
+  def post(self, request, id=None):
+    request.data['uid'] = request.user.uid
+    serializer = CommentSerializer(data=request.data)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 class MoviePopularView(
@@ -105,3 +138,4 @@ class MoviePopularView(
             row = cursor.fetchall()
             res = [{'mid': i[0], 'name': i[1], 'description': i[2], 'heat':i[3]} for i in row]
             return Response(res)
+
