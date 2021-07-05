@@ -52,9 +52,6 @@ Running the Features
 - Either use postman or visit the localhost url http://127.0.0.1:8000/movies/genre/<int:gid> on a browser
 - Will return all the movies associated with the genre specified by the gid
 
-5. What's popular
-- go to /movie/most_popular/, this will gives a list of movies ordered by number of new comments in 30 days.
-
 ## Populating real IMDB data:
 1. Download the titles basic meta data from the IMDB website and put the extracted `data.tsv` file in the `./imdb_movies_to_db/title.basic.tsv` folder in the repo 
    (Note: Data should be retrieved from https://datasets.imdbws.com/title.basics.tsv.gz)
