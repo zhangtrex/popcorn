@@ -49,3 +49,17 @@ class NewMovieRequestSerializer(serializers.ModelSerializer):
       'description',
       'reason',
     )
+
+class CommentSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Comment
+    fields = (
+      'cid',
+      'uid',
+      'mid',
+      'content',
+      'created',
+      'lastupdated',
+      'isdeleted',
+    )
+    

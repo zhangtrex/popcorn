@@ -27,15 +27,28 @@ movies = {}
 genreToInsert = []
 movieToInsert = []
 
+# Delete existing data in these tables that this script populates
+mycursor.execute('SET foreign_key_checks = 0;')
+mycursor.execute('TRUNCATE TABLE MovieGenre')
+mycursor.execute('TRUNCATE TABLE Movie')
+mycursor.execute('TRUNCATE TABLE Genre')
+mycursor.execute('SET foreign_key_checks = 1;')
+
+mydb.commit()
+
 
 # Add to Genres table and movie table
 for row in rows:
     if row[0] == "movie" and numMovies < maxMovies:
         if row[1] != "\\N" and row[2] != "\\N":
             numMovies = numMovies + 1
-            movies[row[1]] = {"genres": row[2].split(","), "mid": -1}
+            if row[1] in movies:
+                movies[row[1]].append({"genres": row[2].split(","), "mid": -1})
+            else:
+                movies[row[1]] = [{"genres": row[2].split(","), "mid": -1}]
+
             movieToInsert.append((row[1], ))
-            for genre in movies[row[1]]["genres"]:
+            for genre in movies[row[1]][-1]["genres"]:
                 if genre not in genres and genre != "\\N":
                     genres[genre] = -1
                     genreToInsert.append((genre, ))
@@ -44,9 +57,9 @@ for row in rows:
 
 # Execute queries we constructed
 mycursor.executemany(
-    "INSERT IGNORE INTO Genre(genre) VALUES (%s)", genreToInsert)
+    "INSERT INTO Genre(genre) VALUES (%s)", genreToInsert)
 mycursor.executemany(
-    "INSERT IGNORE INTO Movie(name) VALUES (%s)", movieToInsert)
+    "INSERT INTO Movie(name, description) VALUES (%s, '')", movieToInsert)
 mydb.commit()
 
 
@@ -58,24 +71,30 @@ genreResults = mycursor.fetchall()
 mycursor.execute("SELECT name, mid FROM Movie")
 movieResults = mycursor.fetchall()
 
-# Create suitable maps to used to generate parameters to insert into MovieGenre table
+# Create suitable maps to use to generate parameters to insert into MovieGenre table
 
 for genre, gid in genreResults:
     genres[genre] = gid
 
+movieCounts = {}
 
 for name, mid in movieResults:
-    movies[name]["mid"] = mid
-    movies[name]["genres"] = [genres[x] for x in movies[name]["genres"]]
+    if name not in movieCounts:
+       movieCounts[name] = 0
+    movie = movies[name][movieCounts[name]]
+    movie["mid"] = mid
+    movie["genres"] = [genres[x] for x in movie["genres"]]
+    movieCounts[name] += 1
 
 movieGenreToInsert = []
 
 # Insert into MovieGenre table
 for name, movie in movies.items():
-    for gid in movie["genres"]:
-        movieGenreToInsert.append((movie["mid"], gid, ))
+    for movieVersion in movie:
+        for gid in movieVersion["genres"]:
+            movieGenreToInsert.append((movieVersion["mid"], gid, ))
 
 mycursor.executemany(
-    "INSERT IGNORE INTO MovieGenre(mid, gid) VALUES (%s, %s)", movieGenreToInsert)
+    "INSERT INTO MovieGenre(mid, gid) VALUES (%s, %s)", movieGenreToInsert)
 
 mydb.commit()
