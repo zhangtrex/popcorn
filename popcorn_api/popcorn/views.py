@@ -65,6 +65,7 @@ class NewMovieRequestView(
   permission_classes = [permissions.IsAuthenticated]
 
   def post(self, request, id=None):
+    request.data['uid'] = request.user.uid
     serializer = NewMovieRequestSerializer(data=request.data)
     if serializer.is_valid():
       serializer.save()

@@ -39,7 +39,8 @@ Running the Features
 2. Create a new movie request
 - Log in using your account
 - Add the auth token returned as an Authorization header with value: Token <enter token>
-- Call the endpoint with the following body fields: uid(int, foreign key), movieName(string), description(string), reason(string)
+- Call the endpoint with the following body fields: movieName(string), description(string), reason(string)
+- The endpoint is: http://127.0.0.1:8000/newmovierequest/
 
 3. Get all comments on a movie
 - Select a movie and get its mid (can get this using the http://localhost:8000/movies endpoint)
