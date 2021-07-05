@@ -75,6 +75,30 @@ INSERT INTO Comment(uid, mid, content, isDeleted)
     VALUES (3, 1, 'Okinawa, one way.', 1);
 
 
+INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
+    VALUES (2, 4, 'I Love this',
+        NOW(),
+        NOW(),
+        false);
+
+INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
+    VALUES (1, 3, 'I Love this',
+        NOW(),
+        NOW(),
+        false);
+
+INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
+    VALUES (1, 5, 'I Love this',
+        NOW(),
+        NOW(),
+        false);
+
+INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
+    VALUES (2, 3, 'I Love this',
+        NOW(),
+        NOW(),
+        false);
+
 SELECT * FROM Comment
 ORDER BY mid
 LIMIT 10;
@@ -127,7 +151,7 @@ SELECT name FROM Movie
     WHERE genre = 'Battles 4';
 
 
---Get movies of the genre 'Animation'
+-- Get movies of the genre 'Animation'
 SELECT name FROM Movie
     INNER JOIN MovieGenre USING (mid) 
     INNER JOIN Genre USING (gid)
@@ -193,6 +217,15 @@ ORDER BY avg(MovieRating.stars) DESC
 LIMIT 10;
 
 
+-- Display movie name by popularity (having most comments)
+
+SELECT Movie.mid, Movie.name, Movie.description, count(Comment.uid) FROM Comment
+JOIN Movie
+WHERE Movie.mid = Comment.mid
+AND Comment.created < DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+GROUP By Movie.mid
+ORDER BY count(Comment.uid) DESC;
+
 
 -- View top 10 comments for a movie ordered by create time
 
@@ -208,3 +241,12 @@ JOIN User
 WHERE User.uid = C.uid
 ORDER BY C.created
 LIMIT 10;
+
+-- Add a new comment
+
+INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
+    VALUES (1, 4, 'Loving this',
+        NOW(),
+        NOW(),
+        false);
+

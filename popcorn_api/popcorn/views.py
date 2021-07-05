@@ -11,6 +11,9 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 
+from django.db import connection
+
+
 class MovieView(
   APIView, 
   UpdateModelMixin,
@@ -23,9 +26,9 @@ class MovieView(
     return Response(read_serializer.data)
 
 class GenreView(
-  APIView, 
+  APIView,
   UpdateModelMixin,
-  DestroyModelMixin, 
+  DestroyModelMixin,
 ):
 
   def get(self, request, id=None):
@@ -34,9 +37,9 @@ class GenreView(
     return Response(read_serializer.data)
 
 class MovieGenreView(
-  APIView, 
+  APIView,
   UpdateModelMixin,
-  DestroyModelMixin, 
+  DestroyModelMixin,
 ):
   # Get the movies associated with a certain genre
   def get(self, request, id=None, *args, **kwargs):
@@ -83,3 +86,22 @@ class MovieCommentsView(
     read_serializer = CommentSerializer(queryset, many=True)
     return Response(read_serializer.data)
     
+
+class MoviePopularView(
+    APIView,
+    UpdateModelMixin,
+    DestroyModelMixin
+):
+    def get(self, request):
+        with connection.cursor() as cursor:
+            cursor.execute("""
+            SELECT Movie.mid, Movie.name, Movie.description, count(Comment.uid) FROM Comment
+            JOIN Movie
+            WHERE Movie.mid = Comment.mid
+            AND Comment.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+            GROUP By Movie.mid
+            ORDER BY count(Comment.uid) DESC;
+        """)
+            row = cursor.fetchall()
+            res = [{'mid': i[0], 'name': i[1], 'description': i[2], 'heat':i[3]} for i in row]
+            return Response(res)

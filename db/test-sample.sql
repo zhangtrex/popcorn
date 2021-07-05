@@ -157,6 +157,15 @@ WHERE Movie.mid = MovieRating.mid
 GROUP By Movie.mid
 ORDER BY avg(MovieRating.stars) DESC;
 
+-- Display movie name by popularity (having most comments)
+
+SELECT Movie.mid, Movie.name, Movie.description, count(Comment.uid) FROM Comment
+JOIN Movie
+WHERE Movie.mid = Comment.mid
+AND Comment.created < DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+GROUP By Movie.mid
+ORDER BY count(Comment.uid) DESC;
+
 -- View all comments for a movie ordered by create time
 
 SELECT User.username, C.content FROM
