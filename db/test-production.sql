@@ -151,7 +151,7 @@ SELECT name FROM Movie
     WHERE genre = 'Battles 4';
 
 
---Get movies of the genre 'Animation'
+-- Get movies of the genre 'Animation'
 SELECT name FROM Movie
     INNER JOIN MovieGenre USING (mid) 
     INNER JOIN Genre USING (gid)
