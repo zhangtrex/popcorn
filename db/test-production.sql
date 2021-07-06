@@ -24,7 +24,7 @@ ORDER BY uid DESC
 LIMIT 10;
 
 
--- Adding  users
+-- Adding users(User Registration)
 INSERT INTO User(password, username, accesslevel, is_superuser, first_name, last_name, email, is_staff, is_active, date_joined, isBlocked, isDeleted)
     VALUES ('passwd1', 'testu1', 0, false, 'u1', 'test', 'testu1@test.ca', false,
         true, '2020-06-01 09:38:08', false, false);
@@ -42,6 +42,11 @@ SELECT * FROM User
 ORDER BY uid DESC
 LIMIT 3;
 
+SELECT password FROM User
+    WHERE username = 'testu1';
+
+SELECT password, email FROM User
+    WHERE username = 'testu2';
 
 
 -- Submit movie-adding requests
@@ -209,11 +214,11 @@ SELECT content, created, lastUpdated FROM Comment
 INSERT INTO NewMovieRequest (uid, movieName, description, reason)
 (
     SELECT 1, 'A new movie', 'this is a new movie', 'I want to add this movie'
-	WHERE 1 in (
-		SELECT User.uid FROM User
-		WHERE User.isBlocked = 0
-		AND User.isDeleted = 0
-	)
+    WHERE 1 in (
+        SELECT User.uid FROM User
+        WHERE User.isBlocked = 0
+        AND User.isDeleted = 0
+    )
 );
 
 -- display top 10 movie names for a genre by mid
@@ -223,7 +228,7 @@ join MovieGenre
 WHERE MovieGenre.mid = Movie.mid
 AND MovieGenre.gid in
 (
-	SELECT gid from Genre
+    SELECT gid from Genre
     WHERE Genre.genre = 'Family'
 )
 ORDER BY Movie.mid
@@ -241,25 +246,15 @@ ORDER BY avg(MovieRating.stars) DESC
 LIMIT 10;
 
 
--- Display movie name by popularity (having most comments)
-
-SELECT Movie.mid, Movie.name, Movie.description, count(Comment.uid) FROM Comment
-JOIN Movie
-WHERE Movie.mid = Comment.mid
-AND Comment.created < DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-GROUP By Movie.mid
-ORDER BY count(Comment.uid) DESC;
-
-
 -- View top 10 comments for a movie ordered by create time
 
 SELECT User.username, C.content FROM
 (
-	SELECT Movie.mid, Comment.content, Comment.uid, Comment.created FROM Comment
-	JOIN Movie
-	WHERE Movie.mid = Comment.mid
-	AND Comment.isDeleted = 0
-	AND Movie.mid = 1
+    SELECT Movie.mid, Comment.content, Comment.uid, Comment.created FROM Comment
+    JOIN Movie
+    WHERE Movie.mid = Comment.mid
+    AND Comment.isDeleted = 0
+    AND Movie.mid = 1
 ) as C
 JOIN User
 WHERE User.uid = C.uid
@@ -276,14 +271,16 @@ SELECT AVG(stars), SUM(stars) FROM Comment
         ON MovieRating.mid = Comment.mid
     WHERE Comment.mid = 1;
 
+
 -- Display movie name by popularity (having most comments)
 
 SELECT Movie.mid, Movie.name, Movie.description, count(Comment.uid) FROM Comment
 JOIN Movie
 WHERE Movie.mid = Comment.mid
-AND Comment.created < DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+AND Comment.created > DATE_SUB(CURDATE(), INTERVAL 30 DAY)
 GROUP By Movie.mid
 ORDER BY count(Comment.uid) DESC;
+
 
 -- Add a new comment
 
@@ -293,3 +290,13 @@ INSERT INTO Comment(uid, mid, content, created, lastupdated, isdeleted)
         NOW(),
         false);
 
+-- Adding User (User Registration)
+
+INSERT INTO User(password, username, accesslevel, is_superuser, first_name, last_name, email, is_staff, is_active, date_joined, isBlocked, isDeleted)
+    VALUES ('passwd4', 'testu4', 0, false, 'u4', 'test', 'testu4@test.ca', false,
+        true, '2020-7-01 10:38:08', false, false);
+    
+-- Login verification
+
+SELECT password FROM User
+    WHERE username = 'testu4';
