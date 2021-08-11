@@ -1,0 +1,45 @@
+{
+  "name": "my-website",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://suriendg.tk/",
+  "dependencies": {
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.39",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-scrollable-anchor": "^0.6.0",
+    "@types/react-visibility-sensor": "^5.0.1",
+    "bootstrap": "^4.5.0",
+    "core-js": "^3.6.5",
+    "node-sass": "^4.14.1",
+    "react": "^16.13.1",
+    "react-app-polyfill": "^1.0.6",
+    "react-bootstrap": "^1.0.1",
+    "react-dom": "^16.13.1",
+    "react-particles-js": "^2.7.1",
+    "react-scripts": "^3.4.1",
+    "react-scrollable-anchor": "^0.6.1",
+    "react-visibility-sensor": "^5.1.1",
+    "regenerator-runtime": "^0.13.5",
+    "typescript": "^3.9.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "last 1 ie version",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^2.5.1"
+  }
+}

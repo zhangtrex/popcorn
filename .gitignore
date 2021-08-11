@@ -6,3 +6,4 @@ data.tsv
 popcorn_api/popcorn/__pycache__/
 popcorn_api/popcorn/migrations/
 popcorn_api/popcorn_api/__pycache__/
+node_modules/
