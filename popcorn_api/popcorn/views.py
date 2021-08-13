@@ -1,3 +1,4 @@
+from django.db.models import query
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -7,6 +8,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
+from djoser.serializers import UserCreateSerializer, UserSerializer
+from django.contrib.auth.models import AbstractUser
 
 from .models import *
 from .serializers import *
@@ -15,9 +18,9 @@ from django.db import connection
 
 
 class MovieView(
-  APIView, 
+  APIView,
   UpdateModelMixin,
-  DestroyModelMixin, 
+  DestroyModelMixin,
 ):
 
   def get(self, request, id=None):
@@ -37,7 +40,7 @@ class MovieSingleView(
     return Response(read_serializer.data[0])
 
 class GenreView(
-  APIView, 
+  APIView,
   UpdateModelMixin,
   DestroyModelMixin,
 ):
@@ -48,7 +51,7 @@ class GenreView(
     return Response(read_serializer.data)
 
 class MovieGenreView(
-  APIView, 
+  APIView,
   UpdateModelMixin,
   DestroyModelMixin,
 ):
@@ -77,9 +80,9 @@ class MovieAvgStarsView(
       return Response(0)
 
 class UserView(
-  APIView, 
+  APIView,
   UpdateModelMixin,
-  DestroyModelMixin, 
+  DestroyModelMixin,
 ):
 
   def post(self, request, id=None):
@@ -89,9 +92,9 @@ class UserView(
 
 
 class NewMovieRequestView(
-  APIView, 
+  APIView,
   UpdateModelMixin,
-  DestroyModelMixin, 
+  DestroyModelMixin,
 ):
   permission_classes = [permissions.IsAuthenticated]
 
@@ -102,9 +105,53 @@ class NewMovieRequestView(
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-  
+
+  def get(self, request):
+    queryset = User.objects.filter(uid=request.user.uid).first()
+    read_serializer = UserCreateSerializer(queryset)
+    is_admin = read_serializer.data['accessLevel'] == 1
+
+    if is_admin:
+      getRequestsQuery = NewMovieRequest.objects.filter(status=0)
+    else:
+      getRequestsQuery = NewMovieRequest.objects.filter(uid=request.user.uid)
+
+    requests_read_serializer = NewMovieRequestSerializer(getRequestsQuery, many=True)
+
+    return Response(requests_read_serializer.data)
+
+
+class ApproveMovieRequest(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+  permission_classes = [permissions.IsAuthenticated]
+
+  def patch(self, request, id=None, *args, **kwargs):
+    queryset = User.objects.filter(uid=request.user.uid).first()
+    read_serializer = UserCreateSerializer(queryset)
+    is_admin = read_serializer.data['accessLevel'] == 1
+
+    if not is_admin:
+      return Response(status=status.HTTP_403_FORBIDDEN)
+
+    queryset = NewMovieRequest.objects.get(nid=kwargs['nid'])
+    queryset.status = 1
+    queryset.save(update_fields=['status'])
+
+    # Insert a new movie
+    new_movie_data = {"name": queryset.movieName, "description": queryset.description}
+    serializer = MovieSerializer(data=new_movie_data)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 class MovieCommentsView(
-  APIView, 
+  APIView,
   UpdateModelMixin,
   DestroyModelMixin,
 ):
@@ -113,6 +160,24 @@ class MovieCommentsView(
     queryset = Comment.objects.filter(mid=kwargs['mid'])
     read_serializer = CommentNestingUserSerializer(queryset, many=True)
     return Response(read_serializer.data)
+
+class DeleteMovieRequestView(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+
+  def delete(self, request, id=None, *args, **kwargs):
+    myquery = NewMovieRequest.objects.filter(nid=kwargs['nid'])
+    read_serializer2 = NewMovieRequestSerializer(myquery, many=True)
+    movie_request_uid = read_serializer2.data[0]['uid']
+
+    if movie_request_uid != request.user.uid:
+      return Response(status=status.HTTP_403_FORBIDDEN)
+
+    movie_object = NewMovieRequest.objects.get(nid=kwargs['nid'])
+    movie_object.delete()
+    return Response(status=status.HTTP_200_OK)
 
 
 class NewCommentView(
@@ -164,7 +229,7 @@ class NewMovieRatingView(
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class MoviePopularView(
     APIView,
@@ -185,3 +250,55 @@ class MoviePopularView(
             res = [{'mid': i[0], 'name': i[1], 'description': i[2], 'heat':i[3]} for i in row]
             return Response(res)
 
+
+class RejectMovieRequestView(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+  permission_classes = [permissions.IsAuthenticated]
+
+  def patch(self, request, id=None, *args, **kwargs):
+    queryset = User.objects.filter(uid=request.user.uid).first()
+    read_serializer = UserCreateSerializer(queryset)
+    is_admin = read_serializer.data['accessLevel'] == 1
+
+    if not is_admin:
+      return Response(status=status.HTTP_403_FORBIDDEN)
+
+    queryset = NewMovieRequest.objects.get(nid=kwargs['nid'])
+    queryset.status = 2
+    queryset.save(update_fields=['status'])
+    return Response(status=status.HTTP_200_OK)
+
+
+class GetUserInfoView(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+  def get(self, request, id=None, *args, **kwargs):
+    queryset = User.objects.filter(uid=request.user.uid).first()
+    read_serializer = UserCreateSerializer(queryset)
+    is_admin = read_serializer.data['accessLevel'] == 1
+    return Response(is_admin, status=status.HTTP_200_OK)
+
+
+class DeleteCommentView(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+
+  def delete(self, request, id=None, *args, **kwargs):
+    queryset = User.objects.filter(uid=request.user.uid).first()
+    read_serializer = UserCreateSerializer(queryset)
+    is_admin = read_serializer.data['accessLevel'] == 1
+
+    comment_object = Comment.objects.get(cid=kwargs['cid'])
+
+    if is_admin or request.user.uid == comment_object.uid.uid:
+      comment_object.delete()
+      return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_403_FORBIDDEN)
