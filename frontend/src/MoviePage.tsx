@@ -5,7 +5,7 @@ class MoviePage extends Component {
     initialState = {
         mid: 25, // TODO: Passed from above
         uid: 1, // TODO: Passed from above
-        adminLevel: 0, // TODO: Passed from above
+        accessLevel: 0, // TODO: Passed from above
         auth_token: "acdf23a63be8b0003da542f6114da45323db8ae7", // TODO: Passed from above
         showModal: true,    // TODO: From Prop
         movie: {
@@ -93,6 +93,7 @@ class MoviePage extends Component {
             content: this.state.newComment
         }
 
+
         fetch(`http://localhost:8000/new_comment/`, {
             method: "POST",
             headers: {
@@ -141,7 +142,7 @@ class MoviePage extends Component {
                     <div className="comment mt-4 text-justify float-left">
                         <h4>{comment.uid.username}</h4>
                         <span><i>{new Date(comment.lastupdated).toDateString()}</i>
-                            {comment.uid.uid === this.state.uid || this.state.adminLevel === 1 ?
+                            {comment.uid.uid === this.state.uid || this.state.accessLevel === 1 ?
                                 <Button onClick={this.deleteComment(comment.cid)}> Delete </Button>
                                 : ''}</span>
                         <br/>
@@ -169,7 +170,9 @@ class MoviePage extends Component {
         })
 
         return (
-            <Modal show={this.state.showModal} onHide={() => this.setState({showModal: false})}>
+            <Modal show={this.state.showModal}
+                   onShow={()=>{this.fetchMovieCommentData(); this.fetchMovieAvgRatingData(); this.fetchMovieData()}}
+                   onHide={() => this.setState({showModal: false})}>
                 <Modal.Header closeButton>
                     {this.state.movie.name}
                 </Modal.Header>
