@@ -145,9 +145,7 @@ class ApproveMovieRequest(
   permission_classes = [permissions.IsAuthenticated]
 
   def patch(self, request, id=None, *args, **kwargs):
-    queryset = User.objects.filter(uid=request.user.uid).first()
-    read_serializer = UserCreateSerializer(queryset)
-    is_admin = read_serializer.data['accessLevel'] == 1
+    is_admin = request.user.accessLevel == 1
 
     if not is_admin:
       return Response(status=status.HTTP_403_FORBIDDEN)
@@ -260,9 +258,7 @@ class RejectMovieRequestView(
   permission_classes = [permissions.IsAuthenticated]
 
   def patch(self, request, id=None, *args, **kwargs):
-    queryset = User.objects.filter(uid=request.user.uid).first()
-    read_serializer = UserCreateSerializer(queryset)
-    is_admin = read_serializer.data['accessLevel'] == 1
+    is_admin = request.user.accessLevel == 1
 
     if not is_admin:
       return Response(status=status.HTTP_403_FORBIDDEN)
@@ -278,11 +274,11 @@ class GetUserInfoView(
   UpdateModelMixin,
   DestroyModelMixin,
 ):
+  permission_classes = [permissions.IsAuthenticated]
   def get(self, request, id=None, *args, **kwargs):
-    queryset = User.objects.filter(uid=request.user.uid).first()
-    read_serializer = UserCreateSerializer(queryset)
-    is_admin = read_serializer.data['accessLevel'] == 1
-    return Response(is_admin, status=status.HTTP_200_OK)
+    return Response({'uid': request.user.uid, 'username': request.user.username,
+                     'accesslevel': request.user.accessLevel
+                     }, status=status.HTTP_200_OK)
 
 
 class DeleteCommentView(
@@ -290,11 +286,9 @@ class DeleteCommentView(
   UpdateModelMixin,
   DestroyModelMixin,
 ):
-
+  permission_classes = [permissions.IsAuthenticated]
   def delete(self, request, id=None, *args, **kwargs):
-    queryset = User.objects.filter(uid=request.user.uid).first()
-    read_serializer = UserCreateSerializer(queryset)
-    is_admin = read_serializer.data['accessLevel'] == 1
+    is_admin = request.user.accessLevel == 1
 
     comment_object = Comment.objects.get(cid=kwargs['cid'])
 
