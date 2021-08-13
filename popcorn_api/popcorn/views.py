@@ -25,6 +25,17 @@ class MovieView(
     read_serializer = MovieSerializer(queryset, many=True)
     return Response(read_serializer.data)
 
+class MovieSingleView(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+
+  def get(self, request, id=None, *args, **kwargs):
+    queryset = Movie.objects.filter(mid=kwargs['mid'])
+    read_serializer = MovieSerializer(queryset, many=True)
+    return Response(read_serializer.data[0])
+
 class GenreView(
   APIView, 
   UpdateModelMixin,
@@ -60,10 +71,10 @@ class MovieAvgStarsView(
     for rating_row in read_serializer.data:
       total_stars += rating_row['stars']
 
-    if len(read_serializer.data):
+    if total_stars:
       return Response(total_stars / len(read_serializer.data))
-    else:  # movie not found
-      return Response(read_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+      return Response(0)
 
 class UserView(
   APIView, 
@@ -100,7 +111,7 @@ class MovieCommentsView(
 
   def get(self, request, id=None, *args, **kwargs):
     queryset = Comment.objects.filter(mid=kwargs['mid'])
-    read_serializer = CommentSerializer(queryset, many=True)
+    read_serializer = CommentNestingUserSerializer(queryset, many=True)
     return Response(read_serializer.data)
 
 
@@ -114,6 +125,41 @@ class NewCommentView(
   def post(self, request, id=None):
     request.data['uid'] = request.user.uid
     serializer = CommentSerializer(data=request.data)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteCommentView(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+
+  def delete(self, request, id=None, *args, **kwargs):
+    queryset = User.objects.filter(uid=request.user.uid).first()
+    read_serializer = UserCreateSerializer(queryset)
+    is_admin = read_serializer.data['accessLevel'] == 1
+
+    comment_object = Comment.objects.get(cid=kwargs['cid'])
+
+    if is_admin or request.user.uid == comment_object.uid.uid:
+      comment_object.delete()
+      return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+class NewMovieRatingView(
+  APIView,
+  UpdateModelMixin,
+  DestroyModelMixin,
+):
+  permission_classes = [permissions.IsAuthenticated]
+
+  def post(self, request, id=None):
+    request.data['uid'] = request.user.uid
+    serializer = MovieRatingSerializer(data=request.data)
     if serializer.is_valid():
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -38,7 +38,7 @@ class GenreSerializer(serializers.ModelSerializer):
 class UserCreateSerializer(UserCreateSerializer):
   class Meta(UserCreateSerializer.Meta):
     model = User
-    fields = ('username', 'password')
+    fields = ('username', 'password', 'accessLevel')
 
 class NewMovieRequestSerializer(serializers.ModelSerializer):
   def create(self, validated_data):
@@ -57,6 +57,28 @@ class NewMovieRequestSerializer(serializers.ModelSerializer):
       'movieName',
       'description',
       'reason',
+    )
+
+class CommentNestingUserSerializer(serializers.ModelSerializer):
+  def create(self, validated_data):
+    return Comment.objects.create(
+      uid = validated_data.get('uid'),
+      mid = validated_data.get('mid'),
+      content = validated_data.get('content'),
+      isdeleted = False,
+    )
+
+  uid = UserSerializer()
+  class Meta:
+    model = Comment
+    fields = (
+      'cid',
+      'uid',
+      'mid',
+      'content',
+      'created',
+      'lastupdated',
+      'isdeleted',
     )
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -81,6 +103,15 @@ class CommentSerializer(serializers.ModelSerializer):
     )
 
 class MovieRatingSerializer(serializers.ModelSerializer):
+
+  def create(self, validated_data):
+    return MovieRating.objects.create(
+      uid = validated_data.get('uid'),
+      mid = validated_data.get('mid'),
+      stars = validated_data.get('stars'),
+      isdeleted = False,
+    )
+
   class Meta:
     model = MovieRating
     fields = (

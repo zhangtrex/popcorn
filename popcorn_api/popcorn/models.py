@@ -39,8 +39,8 @@ class Comment(models.Model):
     uid = models.ForeignKey('User', models.DO_NOTHING, db_column='uid')
     mid = models.ForeignKey('Movie', models.DO_NOTHING, db_column='mid')
     content = models.CharField(max_length=200)
-    created = models.DateTimeField()
-    lastupdated = models.DateTimeField()
+    created = models.DateTimeField(auto_now=True)
+    lastupdated = models.DateTimeField(auto_now=True)
     isdeleted = models.IntegerField(default=0)
 
     class Meta:
@@ -66,7 +66,7 @@ class MovieRating(models.Model):
     stars = models.IntegerField()
     uid = models.ForeignKey('User', models.DO_NOTHING, db_column='uid')
     mid = models.ForeignKey('Movie', models.DO_NOTHING, db_column='mid')
-    isdeleted = models.IntegerField()
+    isdeleted = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'MovieRating'
