@@ -20,3 +20,4 @@ urlpatterns = [
   path('delete_comment/<int:cid>', views.DeleteCommentView.as_view()),
   path('getuserinfo/', views.GetUserInfoView.as_view()),
   path('new_movie_rating/', views.NewMovieRatingView.as_view())
+]

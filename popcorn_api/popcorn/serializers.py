@@ -25,6 +25,7 @@ class MovieSerializer(serializers.ModelSerializer):
       'description'
     )
 
+
 class GenreSerializer(serializers.ModelSerializer):
   genre = serializers.CharField(max_length=45, required=True)
   class Meta:

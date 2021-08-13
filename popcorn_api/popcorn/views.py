@@ -11,10 +11,18 @@ from rest_framework.response import Response
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from django.contrib.auth.models import AbstractUser
 
+from rest_framework.pagination import PageNumberPagination
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage,InvalidPage
+
 from .models import *
 from .serializers import *
 
 from django.db import connection
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 
 class MovieView(
@@ -22,11 +30,18 @@ class MovieView(
   UpdateModelMixin,
   DestroyModelMixin,
 ):
-
-  def get(self, request, id=None):
-    queryset = Movie.objects.all()
-    read_serializer = MovieSerializer(queryset, many=True)
-    return Response(read_serializer.data)
+    def get(self, request, id=None):
+      queryset = Movie.objects.all()
+      name = self.request.query_params.get('name')
+      gid = self.request.query_params.get('gid')
+      if name is not None:
+        queryset = queryset.filter(name__icontains=name)
+      if gid is not None:
+        queryset = queryset.filter(moviegenre__gid=gid)
+      pg = StandardResultsSetPagination()
+      page_roles = pg.paginate_queryset(queryset=queryset,request=request,view=self)
+      read_serializer = MovieSerializer(instance=page_roles, many=True)
+      return Response(read_serializer.data)
 
 class MovieSingleView(
   APIView,
@@ -58,8 +73,9 @@ class MovieGenreView(
   # Get the movies associated with a certain genre
   def get(self, request, id=None, *args, **kwargs):
     queryset = Movie.objects.filter(moviegenre__gid=kwargs['gid'])
-    print(queryset)
-    read_serializer = MovieSerializer(queryset, many=True)
+    pg = StandardResultsSetPagination()
+    page_roles = pg.paginate_queryset(queryset=queryset,request=request,view=self)
+    read_serializer = MovieSerializer(instance=page_roles, many=True)
     return Response(read_serializer.data)
 
 class MovieAvgStarsView(
@@ -195,26 +211,6 @@ class NewCommentView(
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class DeleteCommentView(
-  APIView,
-  UpdateModelMixin,
-  DestroyModelMixin,
-):
-
-  def delete(self, request, id=None, *args, **kwargs):
-    queryset = User.objects.filter(uid=request.user.uid).first()
-    read_serializer = UserCreateSerializer(queryset)
-    is_admin = read_serializer.data['accessLevel'] == 1
-
-    comment_object = Comment.objects.get(cid=kwargs['cid'])
-
-    if is_admin or request.user.uid == comment_object.uid.uid:
-      comment_object.delete()
-      return Response(status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_403_FORBIDDEN)
-
-
 class NewMovieRatingView(
   APIView,
   UpdateModelMixin,
@@ -237,6 +233,7 @@ class MoviePopularView(
     DestroyModelMixin
 ):
     def get(self, request):
+        query_set = Movie.objects.all()
         with connection.cursor() as cursor:
             cursor.execute("""
             SELECT Movie.mid, Movie.name, Movie.description, count(Comment.uid) FROM Comment
@@ -248,7 +245,11 @@ class MoviePopularView(
         """)
             row = cursor.fetchall()
             res = [{'mid': i[0], 'name': i[1], 'description': i[2], 'heat':i[3]} for i in row]
-            return Response(res)
+            # return Response(res)
+            paginator = Paginator(res, 25)
+            page = request.data['page']
+            contacts = paginator.get_page(page)
+            return Response(contacts)
 
 
 class RejectMovieRequestView(
