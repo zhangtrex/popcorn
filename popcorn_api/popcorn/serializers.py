@@ -36,7 +36,7 @@ class GenreSerializer(serializers.ModelSerializer):
     )
   
 
-class UserCreateSerializer(serializers.ModelSerializer):
+class UserCreateSerializer(UserCreateSerializer):
   class Meta:
     model = User
     fields = ('username', 'password', 'accessLevel')

@@ -263,7 +263,7 @@ class RejectMovieRequestView(
       return Response(status=status.HTTP_403_FORBIDDEN)
 
     queryset = NewMovieRequest.objects.get(nid=kwargs['nid'])
-    queryset.status = 2
+    queryset.status = 0
     queryset.save(update_fields=['status'])
     return Response(status=status.HTTP_200_OK)
 
