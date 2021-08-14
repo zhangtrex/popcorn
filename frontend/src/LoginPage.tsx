@@ -13,6 +13,7 @@ type LoginPageProps = {
 type LoginPageState = {
     loginSuccessShow: boolean,
     loginErrorShow: boolean,
+    username: string,
     password: string,
     auth_token: string,
     user?: User
@@ -25,6 +26,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         this.state = {
             loginSuccessShow: false,
             loginErrorShow: false,
+            username: '',
             password: '',
             user: {
                 username: '',
@@ -53,13 +55,13 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         }).then(async response => {
             const res = await response.json();
             // console.log(res);
-            this.setState({user: {uid: res.uid, accesslevel: res.accessLevel, username: res.username}, loginSuccessShow: true});
+            this.setState({user: {uid: res.uid, accesslevel: res.accesslevel, username: res.username}, loginSuccessShow: true});
         });
     }
 
     submitLogin = () => {
         const loginContent = {
-            username: this.state.user!.username,
+            username: this.state.username,
             password: this.state.password,
         }
         // console.log(loginContent);

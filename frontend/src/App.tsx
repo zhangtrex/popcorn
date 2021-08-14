@@ -20,6 +20,7 @@ import useFetch from "react-fetch-hook";
 import MoviePage from './MoviePage';
 import InfiniteScroll from 'react-infinite-scroller';
 import LoginPage from './LoginPage';
+import RegisterPage from './RegisterPage';
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [genreSelected, setGenreSelected] = useState<number>(1);
   const [showLogin, setShowLogin] = useState<boolean>(false);
+  const [showRegister, setShowRegister] = useState<boolean>(false);
 
   const genreFetched = useFetch<Genre[]>("http://localhost:8000/genres/");
 
@@ -130,7 +132,7 @@ function App() {
                 <Button onClick={() => { setShowLogin(true); }}>Login</Button>
               </Nav.Item>
               <Nav.Item>
-                <Button>Register</Button>
+                <Button onClick={() => { setShowRegister(true); }}>Register</Button>
               </Nav.Item>
             </Nav>
           </Navbar.Collapse>
@@ -155,6 +157,11 @@ function App() {
               }
               setShowLogin(false);
             }}></LoginPage>
+
+            <RegisterPage show={showRegister} onHide={() => {
+              setShowRegister(false);
+            }}></RegisterPage>
+            
             <Container>
               <Particles className='particles'
                 params={particleConfig} />

@@ -35,7 +35,7 @@ class MoviePage extends Component<MoviePageProps, MoviePageState> {
             headers: { 'Content-Type': 'application/json' }
         }).then(async response => {
             const res = await response.json();
-            // console.log(res);
+  
             this.setState({ movieComments: res })
         });
     }
@@ -47,7 +47,6 @@ class MoviePage extends Component<MoviePageProps, MoviePageState> {
             headers: { 'Content-Type': 'application/json' }
         }).then(async response => {
             const res = await response.json();
-            // console.log(res);
             this.setState({ movieAvgRating: res.toFixed(2) })
         });
     }

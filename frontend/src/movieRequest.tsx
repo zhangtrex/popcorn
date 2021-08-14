@@ -54,7 +54,6 @@ class MovieRequestModal extends Component<MovieRequestProps, MovieRequestState> 
             },
         }).then(async response => {
             const res = await response.json();
-            // console.log(res);
             this.setState({newMovieRequests: res})
         });
     }

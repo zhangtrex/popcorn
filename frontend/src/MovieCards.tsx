@@ -28,7 +28,6 @@ export function MovieCards(props: MovieCardProps) {
             }
             for (const movie of movies) {
                 const trailer = await movieTrailer(movie.name);
-                console.log(cardsInternal)
                 if (trailer) {
                     const thumbnailUrl = await thumbnailYoutubeVimeo(trailer);
 

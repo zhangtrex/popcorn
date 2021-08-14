@@ -2,22 +2,37 @@ import React, {Component} from 'react';
 import './css/App.scss';
 import {Button, Form, Modal, Alert} from "react-bootstrap";
 
-class RegisterPage extends Component {
-    initialState = {
-        showModal: true,    // TODO: From Prop
-        registrationSuccessShow: false,
-        registrationErrorShow: false,
-        username: '',
-        password: '',
-    };
 
-    state = this.initialState;
+type RegisterPageProps = {
+    show: boolean;
+    onHide: () => void;
+}
+
+type RegisterPageState = {
+    registrationSuccessShow: boolean
+    registrationErrorShow: boolean,
+    username: string,
+    password: string
+}
+
+class RegisterPage extends Component<RegisterPageProps, RegisterPageState> {
+
+    constructor(props: RegisterPageProps) {
+        super(props);
+        this.state = {
+            registrationSuccessShow: false,
+            registrationErrorShow: false,
+            username: '',
+            password: '',
+        };
+    }
+
 
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target
         this.setState({
             [name]: value,
-        })
+        } as any)
     }
 
     submitRegsitration = () => {
@@ -44,8 +59,8 @@ class RegisterPage extends Component {
 
     render() {
         return (
-            <Modal show={this.state.showModal}
-                   onHide={() => this.setState({showModal: false})}>
+            <Modal show={this.props.show}
+                   onHide={() => this.props.onHide()}>
                 <Modal.Header closeButton>
                     User Registration
                 </Modal.Header>
