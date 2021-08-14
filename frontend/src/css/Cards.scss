@@ -1,0 +1,25 @@
+.card:hover {
+    box-shadow: 0px 0px 20px 10px white; 
+    cursor: pointer;
+  }
+
+.card {
+    min-width: fit-content;
+    padding-bottom: 1em;
+}
+
+.card-title.h5 {
+    font-size: 2em;
+    min-height: 3em;
+    color:white;
+}
+.card > .card-header {
+    background-color:rgb(31, 30, 30);
+}
+
+
+#cardImg {
+  height: 25vh;
+  min-width: 15vw;
+ }
+

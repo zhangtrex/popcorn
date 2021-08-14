@@ -2,23 +2,47 @@ import React, {Component} from 'react';
 import BootstrapTable from 'react-bootstrap-table-next'
 import './css/App.scss';
 import {Button, Form, Row, Col, Modal, Alert} from "react-bootstrap";
+import { User } from './apiTypes';
 
-class MovieRequest extends Component {
-    initialState = {
-        uid: 1, // TODO: Passed from above
-        accessLevel: 0, // TODO: Passed from above
-        auth_token: "8ef410645d332bbf632daf05a57bc13570fcdede", // TODO: Passed from above
-        showModal: true,    // TODO: From Prop
-        hidePastRequests: true, // TODO: Passed from above
-        submitSuccessShow: false,
-        submitErrorShow: false,
-        newMovieRequests: [],
-        movieName: "",
-        description: "",
-        reason: "",
-    };
 
-    state = this.initialState;
+
+type MovieRequest = {
+    movieName: string,
+    description: string,
+    reason: string,
+    uid: number,
+}
+
+type MovieRequestProps = {
+    user?: User;
+    show: boolean;
+    hidePastRequests: boolean;
+    onHide: () => void;
+}
+
+
+type MovieRequestState = {
+    submitSuccessShow: boolean,
+    submitErrorShow: boolean,
+    newMovieRequests: MovieRequest[],
+    movieName: string,
+    description: string,
+    reason: string,
+}
+
+class MovieRequestModal extends Component<MovieRequestProps, MovieRequestState> {
+
+    constructor(props: MovieRequestProps){
+        super(props);
+        this.state = {
+            submitSuccessShow: false,
+            submitErrorShow: false,
+            newMovieRequests: [],
+            movieName: '',
+            description: '',
+            reason:'',
+        }
+    }
 
     fetchNewMovieRequestsData = () => {
         fetch(`http://127.0.0.1:8000/newmovierequest/`, {
@@ -26,7 +50,7 @@ class MovieRequest extends Component {
             mode: 'cors',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Token ${this.state.auth_token}`
+                "Authorization": `Token ${sessionStorage.token}`
             },
         }).then(async response => {
             const res = await response.json();
@@ -41,7 +65,7 @@ class MovieRequest extends Component {
                 method: action === "delete" ? "DELETE" : "PATCH",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Token ${this.state.auth_token}`
+                    "Authorization": `Token ${sessionStorage.token}`
                 },
             }).then(async response => {
                 if (response.status === 200) {
@@ -53,15 +77,15 @@ class MovieRequest extends Component {
         };
 
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = event.target
+        const {name, value} = event.target;
         this.setState({
-            [name]: value,
-        })
+            [name]: value as string
+        } as any as MovieRequestState);
     }
 
     submitNewRequest = () => {
         const newRequest = {
-            uid: this.state.uid,
+            uid: this.props.user?.uid,
             movieName: this.state.movieName,
             description: this.state.description,
             reason: this.state.reason
@@ -72,7 +96,7 @@ class MovieRequest extends Component {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Token ${this.state.auth_token}`
+                "Authorization": `Token ${sessionStorage.token}`
             },
             body: JSON.stringify(newRequest)
         }).then(async response => {
@@ -90,21 +114,25 @@ class MovieRequest extends Component {
     }
 
     render() {
-        const newMovieRequests = this.state.newMovieRequests.map((req: any, index) => {
+
+        const newMovieRequests = !this.props.user ? [] : this.state.newMovieRequests.map((req: any, index) => {
             req['status'] =
                 req['status'] === '1'
                     ? 'Approved'
                     : req['status'] === '2'
                         ? 'Rejected'
                         : 'Pending';
-            if (this.state.uid === req['uid']) {
-                req['delete_button'] =
-                    <Button onClick={this.actionOnNewMovieRequest("delete")(req['nid'])}> Delete </Button>;
-            } else {
-                req['delete_button'] =
-                    <Button> Not Your Request </Button>;
+            if (this.props.user) {
+                if (this.props.user.uid === req['uid']) {
+                    req['delete_button'] =
+                        <Button onClick={this.actionOnNewMovieRequest("delete")(req['nid'])}> Delete </Button>;
+                } else {
+                    req['delete_button'] =
+                        <Button> Not Your Request </Button>;
+                }
             }
-            if (this.state.accessLevel === 1) {
+           
+            if (this.props.user && this.props.user.accesslevel === 1) {
                 req['admin_buttons'] =
                     <div>
                         <Button onClick={this.actionOnNewMovieRequest("approve")(req['nid'])}> Approve </Button>
@@ -166,28 +194,30 @@ class MovieRequest extends Component {
             dataField: 'status',
             text: 'Status'
         }];
-
-        if (this.state.accessLevel === 1) {
-            columns.push({
-                dataField: 'admin_buttons',
-                text: 'Action'
-            })
-        } else {
-            columns.push({
-                dataField: 'delete_button',
-                text: 'Delete?'
-            })
+        if (this.props.user) {
+            if (this.props.user.accesslevel === 1) {
+                columns.push({
+                    dataField: 'admin_buttons',
+                    text: 'Action'
+                })
+            } else {
+                columns.push({
+                    dataField: 'delete_button',
+                    text: 'Delete?'
+                })
+            }
         }
+        
 
         return (
-            <Modal show={this.state.showModal}
+            <Modal show={this.props.show}
                    onShow={this.fetchNewMovieRequestsData}
-                   onHide={() => this.setState({showModal: false})}>
+                   onHide={() => { this.props.onHide(); }}>
                 <Modal.Header closeButton>
                     New Movie Requests
                 </Modal.Header>
                 <Modal.Body>
-                    {!this.state.hidePastRequests
+                    {!this.props.hidePastRequests
                         ? <BootstrapTable keyField='uid' data={newMovieRequests} columns={columns}/>
                         : ''}
                     <Alert show={this.state.submitSuccessShow} variant="success">
@@ -216,7 +246,7 @@ class MovieRequest extends Component {
                             </Button>
                         </div>
                     </Alert>
-                    {this.state.accessLevel === 0 ? newRequestForm : ''}
+                    {this.props.user && this.props.user.accesslevel === 0 ? newRequestForm : ''}
                 </Modal.Body>
             </Modal>
         );
@@ -224,4 +254,4 @@ class MovieRequest extends Component {
 
 }
 
-export default MovieRequest;
+export default MovieRequestModal;

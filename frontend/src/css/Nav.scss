@@ -1,0 +1,34 @@
+#custom {
+      
+    .navbar-brand {
+      font-size: 2rem;
+      padding-right: 20%;
+      padding-left: 5%;
+    }
+
+  }
+  #custom.navbar {
+    
+    font-size: 1.25rem;
+    text-align:center;
+    height: 17vh;
+  }
+  #responsive-navbar-nav {
+      padding-left: 10%;
+  }
+  #custom.sticky-top {
+	position: fixed;
+	top: 0;
+    width: 100%;
+  }
+  .nav-item {
+      padding-right: 2vw;
+  }
+
+  .content {
+      padding-top: 15vh;
+  }
+
+  .NavButtons {
+    padding-top: 2%;
+  }
