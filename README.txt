@@ -67,6 +67,26 @@ Running the Features
 - Add the auth token returned as an Authorization header with value: Token <enter token>
 - Call the endpoint http://127.0.0.1:8000/new_comment/ with the following body fields: mid(int, foreign key), content(string)
 
+9. Role Base Access Control
+- In our application we have two authorized roles: Admin and Regular. The admin users will be entitled to perform more actions than the regular users. 
+- Users without an account will only be able to call a small subset of api endpoints.
+- When signing up with an account, specify your accessLevel. The Admin access level is mapped to 1, and the Normal User access level is mapped to 0.
+- MovieView, MovieSingleView, GenreView, MovieGenreView, MovieAvgStarsView, UserView, MovieCommentsView, MoviePopularView: These views and their associated endpoints don't require any authentication and authorization. Thus, all users can make these requests.
+- NewMovieRequestView POST: Any logged in user (regular user) can make this request. Since Admin the admin level is above the Regular level, admins can also make the request.
+- NewMovieRequestView GET: Only admins can GET all requests. Regular users will only GET their own requests. All other users are unauthorized.
+- ApproveMovieRequest: Movies requests can only be accepted by Admins.
+- DeleteMovieRequestView: Only authenticated users (at least the regular level) who created the request can delete it.
+- NewCommentView: Only authenticated users with level above and including Regular can make this request.
+- NewMovieRatingView: Only authenticated users with level above and including Regular can make this request.
+- RejectMovieRequestView: Only Admins can reject a movie request.
+- GetUserInfoView: Only authenticated users with level above and included Regular can make this request.
+- DeleteCommentView: Either an admin or the user who created the comment can delete it.
+
+10. Security
+- Passwords must be complex with numbers, letters, and at least a symbol. They must be longer than 8 characters.
+- Once the password is entered, it is hashed and only the hashed value is stored in the database. 
+- On login, each user will get their user token which is used for authentication and authorization when making API calls
+
 All the above features are implemented in models.py (model definition), serializers.py (serialize the incoming objects to valid models), urls.py (to define endpoints), and views.py (for functional implementation and logic).
 
 ## Populating real IMDB data:
